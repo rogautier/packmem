@@ -60,7 +60,6 @@ if __name__ == '__main__':
     #######PARAMETRES et INPUT#####
     
     try:
-#    if 1:
         outputname = "output"
         pdbout = 0
         parser = argparse.ArgumentParser(description = 'Arguments for the app')
@@ -85,7 +84,6 @@ if __name__ == '__main__':
             parser.print_usage()
             sys.exit()
         
-        # DICT_3L, RESNAME_GLYC, ALIPH_ATOMS, LIPID = p.set_params(args.paramFile)
         DICT_3L, RESNAME_GLYC, LIPID = p.set_params(args.paramFile)
 
         # determine packing defedct type (all/shallow/deep)
@@ -105,13 +103,11 @@ if __name__ == '__main__':
             
         pdblines = bfrg.read_file(args.filename)
         radius = bfrg.read_radius(args.filesrad)
-        #new 2016-08-18
         aliphatic = bfrg.read_aliphatic(args.filesrad)
 
     except:
-#    else:
-        #print('Command line: PacDef_AA_flatLD2014.py -i file.pdb -r fileRadius.txt \
-        #       -p param.txt -o output -d distGlyc -t deep/all/shallow [-v] or -h for help')
+        print('Command line: PacMem.py -i file.pdb -r fileRadius.txt \
+               -p param.txt -o output -d distGlyc -t deep/all/shallow [-v] or -h for help')
         sys.exit()
 
     #extract num_frame in pdb file (line MODEL) or 1 by default
@@ -148,6 +144,7 @@ if __name__ == '__main__':
     ymin, ymax, ymean = l.min_max(yaxis_byatoms)
     zmin, zmax, zmean = l.min_max(zaxis_byatoms)
 
+    # print(dicoMb)
     # modify the lipid name in data (3L->new3L to take account problem POPvsPOPS/POPE)
     pdblines = pdb.modifyPDBdata(pdblines, dicoMb, startID, endID)
 
