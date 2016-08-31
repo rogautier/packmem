@@ -198,7 +198,6 @@ if __name__ == '__main__':
             res_name = atm_line[17:21].strip()
             res_id = int(atm_line[startID:endID])
             radius_res=m.get_radius(radius, res_name, atom_name)
-            # new 2019-08-18
             aliph_atom=m.get_aliphatic(aliphatic, res_name, atom_name)
             coordtmp.append(float(atm_line[30:38])) #X
             coordtmp.append(float(atm_line[38:46])) #Y
@@ -225,7 +224,7 @@ if __name__ == '__main__':
     ### to eliminate shallow defects on edges first: binarize on all defects and storage edges coord
     # shallow PDefects (2)
     if FlagPDtype == 2:
-        # binarization Matrices selon type de defaults [XM][YM]
+        # binarization Matrices according defect type [XM][YM]
         Matrix_UpbinM = m.initialize_matrix2D(len(listX),len(listY),0.)
         Matrix_LobinM = m.initialize_matrix2D(len(listX),len(listY),0.)
         Matrix_UpbinM = m.binarize_matrix_whithout0(MatrixUp, Matrix_UpbinM , -0.01, 0.99)

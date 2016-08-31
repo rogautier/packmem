@@ -3,8 +3,6 @@
 import math
 import BasicFunctions as bfrg
 
-# for 3D distance
-
 # matrix size  (square size = 1A)
 SIZE=1.0
 
@@ -15,7 +13,6 @@ SIZE_SIDE=0.5*(math.sqrt((math.pow(SIZE, 2))* 3.))
 def get_radius(radius, res_name, atom_name):
     return radius[res_name+" "+atom_name]
 
-#new 2016-08-18
 # get aliphatic flag [Lipid_name Atom_name]
 def get_aliphatic(aliphatic, res_name, atom_name):
     return aliphatic[res_name+" "+atom_name]
@@ -25,7 +22,6 @@ def fill_matrix(matrix,coordtmp,res_number,res_name,atom_name, listX,listY,listZ
                 radius_res, FlagPDtype, aliph_atoms):
     v=5
     # for each lipid get listZ
-    #list_aliphatic = aliph_atoms[res_name]
     xLip = coordtmp[0]
     yLip = coordtmp[1]
     zLip = coordtmp[2]
@@ -62,7 +58,6 @@ def fill_matrix(matrix,coordtmp,res_number,res_name,atom_name, listX,listY,listZ
                 if distance <= dist_meet:
                     # shallow PDefects (2) or all PDefects (0)
                     if FlagPDtype is 2 or FlagPDtype is 0:
-                        #matrix[X][Y] = setDefects(atom_name, list_aliphatic, val_mat)
                         matrix[X][Y] = setDefects(atom_name, aliph_atoms, val_mat)
                     # deep PDefects (1)
                     else:
@@ -72,9 +67,8 @@ def fill_matrix(matrix,coordtmp,res_number,res_name,atom_name, listX,listY,listZ
 
 # fill matrix cell depending on the defect type (Deep, Shallow)
 def setDefects(atom_name, list_aliphatic, val_mat):
-    #if atom_name in list_aliphatic:
     if list_aliphatic == "a":
-        val_mat += 0.01
+        val_mat += 0.001
     else:
         val_mat += 1.
     return val_mat

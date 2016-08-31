@@ -8,24 +8,16 @@ import sys
 #tab1 : correspondence between PDB name and Lipid name in the script
 #tab2 : Glycerol atoms by lipid type
 #tab3 : Dictionary of aliphatic atoms for each lipid type
-# RG 2016 01 11
-# add new function and new table (LIPID)
-# RG 2016-08-18 remove table3 (aliphatic dictionary)
 def set_params(filename):
     lines = bfrg.read_file(filename)
     searchRegex = re.compile("^#").search
     limits = filterPick(lines, searchRegex)
     tab_limits = limits_list(lines, limits)
     lines_tab = split_list(lines, tab_limits)
-    # tab1, tab2, tab3 = lines_tab[0], lines_tab[1], lines_tab[2]
     tab1, tab2 = lines_tab[0], lines_tab[1]
     dict_3L = dict_2columns(tab1)
     resname_glyc = dict_2columns(tab2)
-    # list_limits_lip = limits_lip(tab3)
-    # aliph_atoms = dic_aliph_atoms(tab3, list_limits_lip)
-    # RG 2016-01-11
     lipid=dict_lipid(dict_3L)
-    #return(dict_3L, resname_glyc, aliph_atoms, lipid)
     return(dict_3L, resname_glyc, lipid)
 
 
@@ -73,7 +65,6 @@ def dict_lipid(lipid_3L):
 def limits_lip(tab):
     list_limit_lip = []
     for i, lip in enumerate(tab):
-        # spaces problem fixed 2016-08-18 RG
         line = len(lip.strip().split(' '))
         if line > 1:
             list_limit_lip.append(i)
