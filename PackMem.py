@@ -178,6 +178,7 @@ if __name__ == '__main__':
                 tmp.reverse()
                 lower_listZ[res_number] = tmp
 
+    
     # create listX[xmin,xmax] and listY[ymin,ymax] 
     listX = l.create_list_ascend(int(xmin - 1.0), int(xmax + 1.0), m.SIZE)
     listY = l.create_list_ascend(int(ymin - 1.0), int(ymax + 1.0), m.SIZE)
