@@ -75,6 +75,8 @@ if __name__ == '__main__':
                             help = 'Packing Defect Type (all/shallow/deep) default all')
         parser.add_argument('-p', action = 'store', dest = 'paramFile', default = 'param.txt',
                             help = 'File for lipid parameters')
+        parser.add_argument('-n', action = 'store', dest = 'indexFile',
+                            help = 'File for index (Gromacs ndx style). Only Lower/Upper group accepted')
         parser.add_argument('-v', dest = 'pdbout', action = 'store_true',
                             help = 'Increase the verbosity')
                             
@@ -104,6 +106,7 @@ if __name__ == '__main__':
         pdblines = bfrg.read_file(args.filename)
         radius = bfrg.read_radius(args.filesrad)
         aliphatic = bfrg.read_aliphatic(args.filesrad)
+        
 
     except:
         print('Command line: PacMem.py -i file.pdb -r fileRadius.txt \
@@ -149,34 +152,60 @@ if __name__ == '__main__':
     pdblines = pdb.modifyPDBdata(pdblines, dicoMb, startID, endID)
 
     ########## extract UPPER/LOWER leaflet ##########
-    lower_leaflet = []
-    lower_listZ = {}
-    upper_leaflet = []
-    upper_listZ = {}
-    for atm_line in pdblines :
-        if atm_line[0:4] == "ATOM":
-            # for the upper leaflet
-            if (atm_line[12:16].strip() == RESNAME_GLYC[atm_line[17:21].strip()] and
-                float(atm_line[46:54]) > zmean):
+    if args.indexFile == None:
+        lower_leaflet = []
+        lower_listZ = {}
+        upper_leaflet = []
+        upper_listZ = {}
+        for atm_line in pdblines :
+            if atm_line[0:4] == "ATOM":
+                # for the upper leaflet
+                atom_name = atm_line[12:16].strip()
+                res_name = atm_line[17:21].strip()
+                z_coord = float(atm_line[46:54])
+                if (atom_name == RESNAME_GLYC[res_name] and z_coord > zmean):
+                    res_number = int(atm_line[startID:endID])
+                    # append res_id in the list of lipids in upper leaflet
+                    upper_leaflet.append(res_number)
+                    # build list of Z-level for the Upper leaflet
+                    tmp = l.create_list_ascend(z_coord - args.dist_suppl_Z, 
+                                                    zmax + 1.0, m.SIZE)
+                    tmp.reverse()
+                    upper_listZ[res_number] = tmp
+                # for the lower leaflet
+                if (atom_name == RESNAME_GLYC[res_name] and z_coord < zmean):
+                    res_number = int(atm_line[startID:endID])
+                    # append res_id in the list of lipids in lower leaflet
+                    lower_leaflet.append(res_number)
+                    # build list of Z-level for the lower leaflet
+                    tmp = l.create_list_descend(z_coord + args.dist_suppl_Z, 
+                                                    zmin - 1.0, m.SIZE * -1)
+                    tmp.reverse()
+                    lower_listZ[res_number] = tmp
+    else:
+        (lower_leaflet, upper_leaflet) = p.read_ndx(args.indexFile)
+        lower_listZ = {}
+        upper_listZ = {}
+        for atm_line in pdblines :
+            if atm_line[0:4] == "ATOM":
+                atom_name = atm_line[12:16].strip()
+                res_name = atm_line[17:21].strip()
+                z_coord = float(atm_line[46:54])
                 res_number = int(atm_line[startID:endID])
-                # append res_id in the list of lipids in upper leaflet
-                upper_leaflet.append(res_number)
-                # build list of Z-level for the Upper leaflet
-                tmp = l.create_list_ascend(float(atm_line[46:54]) - args.dist_suppl_Z, 
-                                                zmax + 1.0, m.SIZE)
-                tmp.reverse()
-                upper_listZ[res_number] = tmp
-            # for the lower leaflet
-            if (atm_line[12:16].strip() == RESNAME_GLYC[atm_line[17:21].strip()] and
-                float(atm_line[46:54]) < zmean):
-                res_number = int(atm_line[startID:endID])
-                # append res_id in the list of lipids in lower leaflet
-                lower_leaflet.append(res_number)
-                # build list of Z-level for the lower leaflet
-                tmp = l.create_list_descend(float(atm_line[46:54]) + args.dist_suppl_Z, 
-                                                zmin - 1.0, m.SIZE * -1)
-                tmp.reverse()
-                lower_listZ[res_number] = tmp
+                if (atom_name == RESNAME_GLYC[res_name] and 
+                        res_number in upper_leaflet) :
+                    tmp = l.create_list_ascend(z_coord - args.dist_suppl_Z, 
+                                                    zmax + 1.0, m.SIZE)
+                    tmp.reverse()
+                    upper_listZ[res_number] = tmp
+                if (atom_name == RESNAME_GLYC[res_name] and
+                        res_number in lower_leaflet):
+                    tmp = l.create_list_descend(z_coord + args.dist_suppl_Z, 
+                                                    zmin - 1.0, m.SIZE * -1)
+                    tmp.reverse()
+                    lower_listZ[res_number] = tmp
+                
+                
 
     
     # create listX[xmin,xmax] and listY[ymin,ymax] 

@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 # Funtions for matrix
 import math
+import sys
 import BasicFunctions as bfrg
 
 # matrix size  (square size = 1A)
@@ -11,11 +12,19 @@ SIZE_SIDE=0.5*(math.sqrt((math.pow(SIZE, 2))* 3.))
 
 # get radius from [Lipid_name Atom_name]
 def get_radius(radius, res_name, atom_name):
-    return radius[res_name+" "+atom_name]
+    key = res_name+" "+atom_name
+    if key not in radius.keys():
+        print("ERROR : Association of lipid %s and atom %s not found in parameter file"%(res_name, atom_name))
+        sys.exit()
+    return radius[key]
 
 # get aliphatic flag [Lipid_name Atom_name]
 def get_aliphatic(aliphatic, res_name, atom_name):
-    return aliphatic[res_name+" "+atom_name]
+    key = res_name+" "+atom_name
+    if key not in aliphatic.keys():
+        print("ERROR : Association of lipid %s and atom %s not found in parameter file"%(res_name, atom_name))
+        sys.exit()
+    return aliphatic[key]
 
 # fill the matrix for each atom
 def fill_matrix(matrix,coordtmp,res_number,res_name,atom_name, listX,listY,listZ,

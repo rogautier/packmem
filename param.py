@@ -82,4 +82,31 @@ def dic_aliph_atoms(tab, list_limits):
         dic_aliph_atoms[name_lip] = tab_aliph
     return(dic_aliph_atoms)
 
+#Read a ndx file to set the lower/upper residue number lists
+def read_ndx(ndx_file):
+    lines = bfrg.read_file(ndx_file)
+    lower_leaflet = []
+    upper_leaflet = []
+    index1 = lines[1].split(' ')
+    index2 = lines[3].split(' ')
+    for number in index1:
+        res_num = int(number.strip())
+        if "Lower" in lines[0] or "lower" in lines[0]:
+            lower_leaflet.append(res_num)
+        else: 
+            upper_leaflet.append(res_num)
+    for number in index2:
+        res_num = int(number.strip())
+        if "Lower" in lines[0] or "lower" in lines[0]:
+            upper_leaflet.append(res_num)
+        else:
+            lower_leaflet.append(res_num)
+    return(lower_leaflet, upper_leaflet)
+    
+
+
+
+
+
+
 
