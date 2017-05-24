@@ -63,17 +63,6 @@ def outputPDB_leafletAtm(data, listres, outputname, startID, endID, atm_name):
                 if res_number in listres and atm == atm_name:
                     f.write(val)
 
-# create output file of lipids in listres and molecules in listLD in PDB format
-def outputPDB_leafletLD(data, listres, outputname, startID, endID, listLD):
-    with open(outputname,"w") as f:
-        for val in data:
-            if val[0:4] == "ATOM":
-                res_number=int(val[startID:endID])
-                if res_number in listres:
-                    f.write(val)
-                if res_number in listLD:
-                    f.write(val)
-
 def write_a_pdb_line(file, nb_atm, atm_name, nb_res, coords, nb_defect):
     file.write("%6s%5d %4s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f\n"%
                 ("ATOM  ",nb_atm,"  H1", atm_name, nb_res ,float(coords[0]),float(coords[1]),
@@ -118,13 +107,6 @@ def outputPDB_defects(outputname, FlagPDtype, leaflet, num_frame, listX, listY, 
                                 ("ATOM  ", nb,"  H1", "DEF", int(num_def),
                                 float(coordtmp[0]),float(coordtmp[1]),float(coordtmp[2]),
                                 1.0,num_def))
-                        #f.write("%6s%5d %4s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f\n"%("ATOM  ", nb,"  H1", "DEF", int(Matrix_fin[j][k]),float(coordtmp[0]),float(coordtmp[1]),float(coordtmp[2]),1.0,Matrix_fin[j][k]))
-                    #else:
-                    #   nb+=1
-                    #  	coordtmp=[sliceX,sliceY, Rpos]
-                    # 	dicoDef[int(Matrix_fin[j][k])].append(write_a_pdb_line(nb, 
-                    #	"%6s%5d %4s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f\n"%("ATOM  ", nb,"  H1", "DEF", int(Matrix_fin[j][k]),float(coordtmp[0]),float(coordtmp[1]),float(coordtmp[2]),1.0,Matrix_fin[j][k]))
-        #print(dicoDef)
         listdef = list(dicoDef.keys())
         listdef.sort()
         nb=0
@@ -134,33 +116,22 @@ def outputPDB_defects(outputname, FlagPDtype, leaflet, num_frame, listX, listY, 
                 f.write("%s%5d%s"%(line[:6],nb,line[11:]))
         f.write("ENDMDL\n")
 
-# create output file with defects only in pdb format
-def outputPDB_defects_old(outputname, FlagPDtype, leaflet, num_frame, listX, listY, Rpos, 
-                            Matrix_fin, cluster_edge):
-    outputname = outputname + "_Defect" + leaflet+ "_"+FLAG_TO_DEFECT[FlagPDtype]+".pdb"
-    with open(outputname,"w") as f:
-        f.write("MODEL      %3d\n"%(num_frame))
-        nb=0
-        for j, sliceX in enumerate(listX):
-            for k, sliceY in enumerate(listY):
-                num_def = Matrix_fin[j][k]
-                if num_def !=0. and num_def not in cluster_edge:
-                    nb+=1
-                    coordtmp=[sliceX, sliceY, Rpos]
-                    write_a_pdb_line(f, nb, "DEF", int(num_def), coordtmp, num_def)
-                    #f.write("%6s%5d %4s %3s  %4d    %8.3f%8.3f%8.3f%6.2f%6.2f\n"%("ATOM  ", nb,"  H1", "DEF", int(Matrix_fin[j][k]),float(coordtmp[0]),float(coordtmp[1]),float(coordtmp[2]),1.0,Matrix_fin[j][k]))
-        f.write("ENDMDL\n")
 
 #create output file for packing defects in TXT format
-# #defect size Xposition   Yposition
-# 1    7     7.00    55.00 
+## MatrixSize  9646  9801         # Membrane matrix size, Total matrix size
+## Total   51   582 11.41 6.034   # number of packing defects, total area of packing defects, average size, pourcent of membrane (Membrane matrix size)
+# 1    7     7.00    55.00        #defect size Xposition   Yposition
 # 2    1     7.00    58.00 
 def outputTXT_defects(outputname, FlagPDtype, leaflet, dico_def_area, dico_def_coor, 
                         total_size, total_edge, listX, listY):
     outputname = outputname + "_" + leaflet+ "_"+FLAG_TO_DEFECT[FlagPDtype]+"_result.txt"
     with open(outputname,"w") as f:
         f.write("## MatrixSize %5d %5d \n"%(total_size-total_edge,total_size))
-        f.write("## Total %4d %5d %4.2f %5.3f\n"%(len(dico_def_area),sum(dico_def_area.values()), sum(dico_def_area.values())/float(len(dico_def_area)), (sum(dico_def_area.values())*100.)/(total_size-total_edge)))
+        if len(dico_def_coor) != 0:
+            f.write("## Total %4d %5d %4.2f %5.3f\n"%(len(dico_def_area),sum(dico_def_area.values()), sum(dico_def_area.values())/float(len(dico_def_area)), (sum(dico_def_area.values())*100.)/(total_size-total_edge)))
+        else:
+            #exception if no defect 
+            f.write("## Total 0 0 0.0 0.0\n")
         i=0
         for key in dico_def_coor:
             # version with matrice position

@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     except:
         print('Command line: PacMem.py -i file.pdb -r fileRadius.txt \
-               -p param.txt -o output -d distGlyc -t deep/all/shallow [-v] or -h for help')
+               -p param.txt -o output -d distGlyc -t deep/all/shallow [-n index file] [-v] or -h for help')
         sys.exit()
 
     #extract num_frame in pdb file (line MODEL) or 1 by default
@@ -339,7 +339,7 @@ if __name__ == '__main__':
         coor_clusters_Up = d.del_key_dico(coor_clusters_Up, clust_edge_Up)
         area_clusters_Lo = d.del_key_dico(area_clusters_Lo, clust_edge_Lo)
         coor_clusters_Lo = d.del_key_dico(coor_clusters_Lo, clust_edge_Lo)
- 
+    
     # ############################################# output text file  ####################
     total_size = len(listX) * len(listY)
     pdb.outputTXT_defects(args.outputname, FlagPDtype, "Up", area_clusters_Up, 
