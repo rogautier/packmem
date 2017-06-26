@@ -1,9 +1,7 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-# Pg compute matrix z and x/y for determine packing defects
-# R. Gautier april 2015
-# version matrix3D
-# modif parameters 2016-08-18 (new aliphatic dictionnary)
+# Pg compute packing defects on membranes simulations
+# R. Gautier A. Bacle april 2016
 
 import sys
 import math
@@ -26,8 +24,9 @@ if __name__ == '__main__':
     Python
     Script to compute Packing defect in flat bilayers, Use pdb file (from for example editconf) 
     be careful to PBC to create pdb file
-    Lipids parameters adapted to Berger lipid FF (with corrections) Be careful to the atoms 
-    name if you use other lipids
+    Lipids parameters adapted to Berger lipid FF (with corrections). Be careful to the atoms name if you use other lipids
+    Lipids parameters from CHarmm36 FF (with Klauda corrections). Be careful to the atoms name if you use other lipids
+    Lipids parameters from Martini FF. Be careful to the atoms name if you use other lipids
     fileRadius.txt example:
     DOPC  C02 1.875 a (aliphatic)
     DOPC  O8  1.48 n (non aliphatic)
@@ -109,7 +108,7 @@ if __name__ == '__main__':
         
 
     except:
-        print('Command line: PacMem.py -i file.pdb -r fileRadius.txt \
+        print('Command line: PackMem.py -i file.pdb -r fileRadius.txt \
                -p param.txt -o output -d distGlyc -t deep/all/shallow [-n index file] [-v] or -h for help')
         sys.exit()
 

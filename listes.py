@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 # Functions to create, analyse list variables
+# R. Gautier 2015
 
 # create list[v1 to v2, step]
 def create_list_ascend(v1, v2, step):

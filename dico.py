@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
-#Function about dictionaries
+# Functions about dictionaries
+# R. Gautier 2015
 
 # remove in dict keys from list_key
 def del_key_dico(dico, list_key):

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-# Romain Gautier 2014
+# R. Gautier 2014
 # Basic functions for packing defects determination
 
 # load file return list[line(string)]

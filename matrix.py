@@ -1,5 +1,7 @@
 #-*- coding: utf-8 -*-
 # Funtions for matrix
+# R. Gautier A. Bacle 2015
+
 import math
 import sys
 import BasicFunctions as bfrg

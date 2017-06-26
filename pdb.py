@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
-#Function about PDB data and file
+# Functions about PDB data and output files
+# R. Gautier A. Bacle 2015
 
 FLAG_TO_DEFECT = ["All", "Deep", "Shallow"]
 
