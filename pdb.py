@@ -10,8 +10,9 @@ def modifyPDBdata(datapdb, dico,startID,endID):
     for i, val in enumerate(datapdb):
         if val[0:4] == "ATOM":
             for key in dico:
-                if int(val[startID:endID]) in dico[key]:
-                    # print(key,len(val[17:21].strip()))
+                if int(val[startID:endID]) in dico[key] and len(key) < 3:
+                    datapdb[i]=val[:17]+key+"  "+val[21:]
+                if int(val[startID:endID]) in dico[key] and len(key) == 3:
                     datapdb[i]=val[:17]+key+" "+val[21:]
     return datapdb
 

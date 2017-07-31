@@ -9,6 +9,18 @@ def del_key_dico(dico, list_key):
             del dico[m]
     return dico
 
+# determine if duplicate in residue number
+def detect_duplicate(dico):
+    flagD=0
+    dicotmp={}
+    for key in dico:
+        for val in dico[key]:
+            if val in dicotmp:
+                flagD=1
+            else:
+                dicotmp[val]=1
+    return flagD
+
 # return the maximum value from dico[key]=list
 def max_value_dico(dico):
     return max([max(data2) for data2 in [dico[data] for data in dico.keys()]])
