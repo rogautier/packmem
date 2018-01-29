@@ -1922,7 +1922,7 @@ SOE   HY  1.34 n
 SOE   O31 1.65 n
 SOE   C31 2.00 n
 SOE   O32 1.70 n
-SOE   C32 2.01 aa
+SOE   C32 2.01 a
 SOE   H2X 1.34 a
 SOE   H2Y 1.34 a
 SOE   C23 2.01 a
